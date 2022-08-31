@@ -2,7 +2,7 @@
 date: "2019-02-25T13:38:41-06:00"
 description: Please use this built-in contact form if you would like to get in touch with the author. Or Mariano.
 draft: false
-formspree_form_id: haengmeister@gmail.com
+formspree_form_id: https://formspree.io/f/xrgdbwgr
 layout: split-right
 name: Contact Us Form
 show_poweredby_formspree: true
