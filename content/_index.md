@@ -5,7 +5,7 @@ action_type: text
 description: A data focused personal website with  R code, visualizations and analyses, presented by the famous Italian knight, Mariano da Trani.
 image_left: true
 images:
-- img/revoir.jpg
+- 
 show_action_link: true
 show_social_links: true
 subtitle: Or simply call me Mariano
