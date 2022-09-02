@@ -2,9 +2,12 @@
 title: mersok
 author: Mariano
 date: '2022-09-01'
-slug: []
+slug: [first try for post]
 categories: []
 tags: []
+output: 
+  html_document: 
+    keep_md: yes
 ---
 ```{r}
 a <- 5+5
