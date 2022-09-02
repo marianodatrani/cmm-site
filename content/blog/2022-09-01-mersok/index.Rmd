@@ -1,0 +1,18 @@
+---
+title: mersok
+author: Mariano
+date: '2022-09-01'
+slug: []
+categories: []
+tags: []
+---
+```{r}
+a <- 5+5
+a
+```
+a is `a`
+
+```{r}
+b <- 3*a
+```
+b is `b`
