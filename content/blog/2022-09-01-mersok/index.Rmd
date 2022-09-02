@@ -10,9 +10,9 @@ tags: []
 a <- 5+5
 a
 ```
-a is `a`
+a is `r a`
 
 ```{r}
 b <- 3*a
 ```
-b is `b`
+b is `r b`
