@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+Thumbs.db
+.hugo_build.lock
+.DS_Store
+/public/
+/resources/

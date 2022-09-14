@@ -9,7 +9,7 @@ tags:
   - rrrrrrrr
 subtitle: ''
 excerpt: 'A workflow to read in data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 1 - simpler case.'
-draft: yes
+draft: false
 series: ~
 layout: single
 ---
