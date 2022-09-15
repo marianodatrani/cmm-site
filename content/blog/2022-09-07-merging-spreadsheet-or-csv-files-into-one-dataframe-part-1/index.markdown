@@ -227,7 +227,7 @@ sum(sapply(list_for_dataframes, nrow))
 
 Success. \
 \
-Now we need to determine the "real" timeline with which we can align our existing but not complete set of time values in `combined_df`. I used to set it for a whole calendar year with appropriate time intervals, but we can define it to get the earliest and latest time values from the datetime column. \
+Now we need to determine the "real" timeline with which we can align our existing but not complete set of time values in `combined_df`. I used to set it for a whole calendar year with appropriate time intervals, but we can define it to get the earliest and latest time values from the datetime column with `min(combined_df$Datetime)` and `max(combined_df$Datetime)`. \
 In either case we use the `seq.POSIXt()` function to genereate a sequence of datetime values, wrapped inside the `as_tibble_col()` function to create a one-column `data.frame` from the sequence. \
 For the whole year version we use yet another function, `make_datetime()` to manually create the beginning and end time of the sequence, with arguments year, month, day, hour, minute and second. , representing the first two arguments of `seq.POSIXt()`. The third argument is the time interval of the sequence expressed in seconds, which is 600 in our case, as there are 10 minute intervals. \
 We start with an additional step I used to have: getting the actual year from the name of the working directory, "Downloads2020" in this case. This way I could use the same code for different year folders. For that, I call `getwd()` inside a `str_extract()` function that has a regex pattern argument "\\\d{4}" detecting 4 consecutive digits. This function extracts that part captured by the pattern, the year in our case, and we wrap it inside the `as.integer()` function to store it as a number instead of a character vector.
@@ -322,7 +322,7 @@ writexl::write_xlsx(final_df, str_c("Loggername", actual_year, ".xlsx"))
 ```
 
 And that's all. \
-This workflow can be adapted easily to input files with ".xls" or ".xlsx" extensions, using the `read_excel()`, `read_xls()` or `read_xlsx()` functions from the `readxl` package. \
+This workflow can be adapted easily to input files with ".xls" or ".xlsx" extensions, using the `read_excel()`, `read_xls()` or `read_xlsx()` functions from the `readxl` package, if the files have the same one-row-header format, that is column names are in the first row. But in later posts we'll check different cases. \
 \
 Arrivederci a presto!
 
