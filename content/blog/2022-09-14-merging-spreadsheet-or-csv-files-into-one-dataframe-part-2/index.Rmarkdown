@@ -14,6 +14,7 @@ series: ~
 layout: single
 ---
 
+<<<<<<< HEAD
 
 ```{r packages, message=FALSE}
 
@@ -41,3 +42,5 @@ setwd("path/to/Downloads2020")
 
 
 
+=======
+>>>>>>> main
