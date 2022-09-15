@@ -156,7 +156,7 @@ actual_year <- 2020
 
 ```
 
-```{r fake actual year eval=FALSE}
+```{r fake actual year, eval=FALSE}
 
 actual_year <- as.integer(str_extract(getwd(), "\\d{4}"))
 
