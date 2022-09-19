@@ -8,7 +8,7 @@ categories:
 tags:
   - rrrrrrrr
 subtitle: ''
-excerpt: 'A workflow to read in data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 2 - bunches of files.'
+excerpt: 'A workflow to read data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 2 - bunches of files.'
 draft: false
 series: ~
 layout: single

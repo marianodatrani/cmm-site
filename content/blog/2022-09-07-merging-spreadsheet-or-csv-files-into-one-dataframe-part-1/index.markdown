@@ -8,7 +8,7 @@ categories:
 tags:
   - rrrrrrrr
 subtitle: ''
-excerpt: 'A workflow to read in data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 1 - simpler case.'
+excerpt: 'A workflow to read data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 1 - simpler case.'
 draft: false
 series: ~
 layout: single
@@ -57,8 +57,9 @@ filenames
 ```
 
 ```
-## [1] "Loggername20200122.csv" "Loggername20200310.csv" "Loggername20200723.csv"
-## [4] "Loggername20200915.csv" "Loggername20201027.csv" "Loggername20210108.csv"
+## [1] "Loggername20200122.csv" "Loggername20200310.csv" "Loggername20200522.csv"
+## [4] "Loggername20200723.csv" "Loggername20200915.csv" "Loggername20201027.csv"
+## [7] "Loggername20210108.csv"
 ```
 There are 5 files with matching names. \
 We can get one element of this vector with its index number surrounded by `[]`, e.g. `filenames[2]` will give us the second filename from the vector.  
@@ -105,11 +106,11 @@ glimpse(list_for_dataframes)
 ```
 
 ```
-## List of 6
+## List of 7
 ##  $ Loggername20200122.csv: spec_tbl_df [4,896 x 3] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##   ..$ Datetime: POSIXct[1:4896], format: "2019-12-19 12:20:00" "2019-12-19 12:30:00" ...
-##   ..$ Sensor_A: num [1:4896] 27.2 -3.11 -13.38 -19.03 13.29 ...
-##   ..$ Sensor_B: num [1:4896] 87.8 48.1 15.3 14.5 32.8 ...
+##   ..$ Sensor_A: num [1:4896] 29 27.4 -13.6 28 36.1 ...
+##   ..$ Sensor_B: num [1:4896] 53.32 48.16 7.85 61.6 20.45 ...
 ##   ..- attr(*, "spec")=
 ##   .. .. cols(
 ##   .. ..   Datetime = col_datetime(format = ""),
@@ -119,8 +120,19 @@ glimpse(list_for_dataframes)
 ##   ..- attr(*, "problems")=<externalptr> 
 ##  $ Loggername20200310.csv: spec_tbl_df [6,917 x 3] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##   ..$ Datetime: POSIXct[1:6917], format: "2020-01-22 11:50:00" "2020-01-22 12:00:00" ...
-##   ..$ Sensor_A: num [1:6917] -13.226 -0.562 0.476 -0.886 -1.652 ...
-##   ..$ Sensor_B: num [1:6917] 18.11 38.3 73.68 47.42 4.61 ...
+##   ..$ Sensor_A: num [1:6917] -18.91 21.17 26.41 8.72 -3.87 ...
+##   ..$ Sensor_B: num [1:6917] 5.15 48.73 4.97 76.31 69.15 ...
+##   ..- attr(*, "spec")=
+##   .. .. cols(
+##   .. ..   Datetime = col_datetime(format = ""),
+##   .. ..   Sensor_A = col_double(),
+##   .. ..   Sensor_B = col_double()
+##   .. .. )
+##   ..- attr(*, "problems")=<externalptr> 
+##  $ Loggername20200522.csv: spec_tbl_df [10,537 x 3] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##   ..$ Datetime: POSIXct[1:10537], format: "2020-03-10 12:20:00" "2020-03-10 12:30:00" ...
+##   ..$ Sensor_A: num [1:10537] -15.99 -7.01 -10.2 21.03 30.6 ...
+##   ..$ Sensor_B: num [1:10537] 26.569 45.081 0.548 83.368 88.509 ...
 ##   ..- attr(*, "spec")=
 ##   .. .. cols(
 ##   .. ..   Datetime = col_datetime(format = ""),
@@ -130,8 +142,8 @@ glimpse(list_for_dataframes)
 ##   ..- attr(*, "problems")=<externalptr> 
 ##  $ Loggername20200723.csv: spec_tbl_df [8,932 x 3] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##   ..$ Datetime: POSIXct[1:8932], format: "2020-05-22 17:20:00" "2020-05-22 17:30:00" ...
-##   ..$ Sensor_A: num [1:8932] 36.8 24.6 22.8 5.4 -14.5 ...
-##   ..$ Sensor_B: num [1:8932] 5.92 8.89 41.27 39.75 60.46 ...
+##   ..$ Sensor_A: num [1:8932] 29.8 39.5 -18.9 38.1 -5.9 ...
+##   ..$ Sensor_B: num [1:8932] 98 20.2 25.1 47.2 25.9 ...
 ##   ..- attr(*, "spec")=
 ##   .. .. cols(
 ##   .. ..   Datetime = col_datetime(format = ""),
@@ -141,8 +153,8 @@ glimpse(list_for_dataframes)
 ##   ..- attr(*, "problems")=<externalptr> 
 ##  $ Loggername20200915.csv: spec_tbl_df [7,783 x 3] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##   ..$ Datetime: POSIXct[1:7783], format: "2020-07-23 17:20:00" "2020-07-23 17:30:00" ...
-##   ..$ Sensor_A: num [1:7783] -7.99 33.84 18.02 32.12 17.1 ...
-##   ..$ Sensor_B: num [1:7783] 65.6 21.9 90.2 32.4 35 ...
+##   ..$ Sensor_A: num [1:7783] 15.44 20.59 -7.66 30.59 -16.83 ...
+##   ..$ Sensor_B: num [1:7783] 47.4 90 48.3 35.2 14.2 ...
 ##   ..- attr(*, "spec")=
 ##   .. .. cols(
 ##   .. ..   Datetime = col_datetime(format = ""),
@@ -152,8 +164,8 @@ glimpse(list_for_dataframes)
 ##   ..- attr(*, "problems")=<externalptr> 
 ##  $ Loggername20201027.csv: spec_tbl_df [6,029 x 3] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##   ..$ Datetime: POSIXct[1:6029], format: "2020-09-15 18:10:00" "2020-09-15 18:20:00" ...
-##   ..$ Sensor_A: num [1:6029] -13.67 16.93 -6.59 12.6 30.93 ...
-##   ..$ Sensor_B: num [1:6029] 22.77 48.14 78.1 3.09 27.58 ...
+##   ..$ Sensor_A: num [1:6029] 12.66 -3.82 -15.88 25.97 17.32 ...
+##   ..$ Sensor_B: num [1:6029] 16 16.2 85 27.4 85.6 ...
 ##   ..- attr(*, "spec")=
 ##   .. .. cols(
 ##   .. ..   Datetime = col_datetime(format = ""),
@@ -163,8 +175,8 @@ glimpse(list_for_dataframes)
 ##   ..- attr(*, "problems")=<externalptr> 
 ##  $ Loggername20210108.csv: spec_tbl_df [10,523 x 3] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##   ..$ Datetime: POSIXct[1:10523], format: "2020-10-27 14:50:00" "2020-10-27 15:00:00" ...
-##   ..$ Sensor_A: num [1:10523] 38.2 19.6 1.7 10.4 15 ...
-##   ..$ Sensor_B: num [1:10523] 47.58 55.6 61.09 9.51 95.97 ...
+##   ..$ Sensor_A: num [1:10523] 0.439 17.675 22.491 38.042 22.879 ...
+##   ..$ Sensor_B: num [1:10523] 41.9 62.7 41.8 62.8 69 ...
 ##   ..- attr(*, "spec")=
 ##   .. .. cols(
 ##   .. ..   Datetime = col_datetime(format = ""),
@@ -186,12 +198,12 @@ head(list_for_dataframes[[5]])
 ## # A tibble: 6 x 3
 ##   Datetime            Sensor_A Sensor_B
 ##   <dttm>                 <dbl>    <dbl>
-## 1 2020-09-15 18:10:00   -13.7     22.8 
-## 2 2020-09-15 18:20:00    16.9     48.1 
-## 3 2020-09-15 18:30:00    -6.59    78.1 
-## 4 2020-09-15 18:40:00    12.6      3.09
-## 5 2020-09-15 18:50:00    30.9     27.6 
-## 6 2020-09-15 19:00:00    20.7      7.20
+## 1 2020-07-23 17:20:00    15.4     47.4 
+## 2 2020-07-23 17:30:00    20.6     90.0 
+## 3 2020-07-23 17:40:00    -7.66    48.3 
+## 4 2020-07-23 17:50:00    30.6     35.2 
+## 5 2020-07-23 18:00:00   -16.8     14.2 
+## 6 2020-07-23 18:10:00    17.3      2.90
 ```
 That's a more familiar tabular representation of our data, showing that the function imported our data correctly as indicated by the data types of columns too. \
 \
@@ -211,7 +223,7 @@ nrow(combined_df)
 ```
 
 ```
-## [1] 45080
+## [1] 55617
 ```
 
 And then check the sum row number of the separate `data.frame`s. Because they are stored in a list, we can't call `nrow()` directly, so we wrap this function in a `sapply()` call, which gives these values in a vector, and then get the sum of row numbers with the `sum()` function.
@@ -222,7 +234,7 @@ sum(sapply(list_for_dataframes, nrow))
 ```
 
 ```
-## [1] 45080
+## [1] 55617
 ```
 
 Success. \
@@ -287,12 +299,12 @@ head(final_df)
 ## # A tibble: 6 x 3
 ##   Datetime            Sensor_A Sensor_B
 ##   <dttm>                 <dbl>    <dbl>
-## 1 2020-01-01 00:00:00    18.6     93.7 
-## 2 2020-01-01 00:10:00   -14.8      4.83
-## 3 2020-01-01 00:20:00    10.8     48.7 
-## 4 2020-01-01 00:30:00    25.4     32.8 
-## 5 2020-01-01 00:40:00    23.6     48.6 
-## 6 2020-01-01 00:50:00     4.66    34.9
+## 1 2020-01-01 00:00:00    -7.98    85.1 
+## 2 2020-01-01 00:10:00     6.91     8.32
+## 3 2020-01-01 00:20:00    25.9     69.5 
+## 4 2020-01-01 00:30:00    20.1     83.3 
+## 5 2020-01-01 00:40:00     1.71    23.4 
+## 6 2020-01-01 00:50:00    36.1     98.5
 ```
 
 ```r
@@ -303,12 +315,12 @@ tail(final_df)
 ## # A tibble: 6 x 3
 ##   Datetime            Sensor_A Sensor_B
 ##   <dttm>                 <dbl>    <dbl>
-## 1 2020-12-31 23:00:00    31.9     52.8 
-## 2 2020-12-31 23:10:00    -8.50    23.9 
-## 3 2020-12-31 23:20:00   -19.9      5.73
-## 4 2020-12-31 23:30:00    24.8     50.6 
-## 5 2020-12-31 23:40:00   -15.7      3.10
-## 6 2020-12-31 23:50:00    23.7     26.9
+## 1 2020-12-31 23:00:00    16.8      2.05
+## 2 2020-12-31 23:10:00    13.0     27.1 
+## 3 2020-12-31 23:20:00    -8.75    73.1 
+## 4 2020-12-31 23:30:00     3.66    55.9 
+## 5 2020-12-31 23:40:00    -4.35    46.3 
+## 6 2020-12-31 23:50:00    22.7     56.4
 ```
 
 Everything is fine. \
