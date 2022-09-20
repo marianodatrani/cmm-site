@@ -1,0 +1,67 @@
+---
+title: Merging spreadsheet or csv files into one dataframe - Part 3
+author: Mariano
+date: '2022-09-19'
+slug: [merging-files-part-3]
+categories:
+  - File merging
+tags:
+  - rrrrrrrr
+subtitle: ''
+excerpt: 'A workflow to read data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 3 - dealing with untidy columns and rows.'
+draft: yes
+series: ~
+layout: single
+---
+
+Benvenuti again. Today we improve further our workflow started in [Part 1](https://datamariano.netlify.app/blog/2022-09-07-merging-spreadsheet-or-csv-files-into-one-dataframe-part-1/) and expanded in [Part 2](https://datamariano.netlify.app/blog/2022-09-14-merging-spreadsheet-or-csv-files-into-one-dataframe-part-2/). In these previous episodes we used files with clean header-row-column format so the reading function could do its work with only filename given. important to know that we have no information about files before read 
+As always, we start with loading the packages we will use.
+
+
+```r
+library(dplyr)
+library(readxl)
+library(tibble)
+library(stringr)
+library(lubridate)
+```
+
+And continue with setting the working directory, where we have the files. 
+
+
+
+
+```r
+setwd("path/to/Downloads2020")
+```
+
+Then we get all filenames we want to read. In the pattern argument of `list.files()` the regex ".*csv$" indicates any character string in filenames ending with ".csv".
+
+
+```r
+filenames <- list.files(pattern = ".*csv$")
+```
+
+Printing our `filenames` vector, we can see that we have several files with different logger-associated names.
+
+
+```r
+filenames
+```
+
+```
+##  [1] "Loggername20200122.csv"       "Loggername20200310.csv"      
+##  [3] "Loggername20200522.csv"       "Loggername20200723.csv"      
+##  [5] "Loggername20200915.csv"       "Loggername20201027.csv"      
+##  [7] "Loggername20210108.csv"       "lovesensors20200122.csv"     
+##  [9] "lovesensors20200310.csv"      "lovesensors20200522.csv"     
+## [11] "lovesensors20200723.csv"      "lovesensors20200915.csv"     
+## [13] "lovesensors20201027.csv"      "lovesensors20210108.csv"     
+## [15] "Other-device20200122.csv"     "Other-device20200310.csv"    
+## [17] "Other-device20200522.csv"     "Other-device20200723.csv"    
+## [19] "Other-device20200915.csv"     "Other-device20201027.csv"    
+## [21] "Other-device20210108.csv"     "Time_machine-66_20200122.csv"
+## [23] "Time_machine-66_20200310.csv" "Time_machine-66_20200522.csv"
+## [25] "Time_machine-66_20200723.csv" "Time_machine-66_20200915.csv"
+## [27] "Time_machine-66_20201027.csv" "Time_machine-66_20210108.csv"
+```
