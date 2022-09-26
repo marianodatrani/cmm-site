@@ -14,8 +14,8 @@ series: ~
 layout: single
 ---
 
-Benvenuti again. Today we improve further our workflow started in [Part 1](https://datamariano.netlify.app/blog/2022-09-07-merging-spreadsheet-or-csv-files-into-one-dataframe-part-1/) and expanded in [Part 2](https://datamariano.netlify.app/blog/2022-09-14-merging-spreadsheet-or-csv-files-into-one-dataframe-part-2/). In these previous episodes we used files with clean header-row-column format so the reading function could do its work with only filename given. important to know that we have no information about files before read 
-As always, we start with loading the packages we will use.
+Benvenuti again. Today we improve further our workflow started in [Part 1](https://datamariano.netlify.app/blog/2022-09-07-merging-spreadsheet-or-csv-files-into-one-dataframe-part-1/) and expanded in [Part 2](https://datamariano.netlify.app/blog/2022-09-14-merging-spreadsheet-or-csv-files-into-one-dataframe-part-2/). In these previous episodes we used files with clean header-row-column format so the reading function could do its work with only filename provided.  \
+As always, we start with loading the packages we will use, continue with setting the working directory, get all filenames we want to read with the `list.files()` function and print our `filenames` to check them. This time we use the `readxl` package instead of `readr`, because our files this time have ".xls" and ".xlsx" extensions.
 
 ```{r packages, message=FALSE}
 
@@ -26,8 +26,6 @@ library(stringr)
 library(lubridate)
 
 ```
-
-And continue with setting the working directory, where we have the files. 
 
 ```{r setup, include=FALSE}
 
@@ -41,18 +39,31 @@ setwd("path/to/Downloads2020")
 
 ```
 
-Then we get all filenames we want to read. In the pattern argument of `list.files()` the regex ".*csv$" indicates any character string in filenames ending with ".csv".
-
 ```{r list files}
 
-filenames <- list.files(pattern = ".*csv$")
+filenames <- list.files(pattern = ".*xlsx$")
 
 ```
-
-Printing our `filenames` vector, we can see that we have several files with different logger-associated names.
 
 ```{r}
 
 filenames
 
 ```
+
+We have two series of files check one of each. important to know that we have no information about files before read in the first file ![stw image](stopthewar.jpg) we have columns \
+in the other ![t1000 image](t1000.jpg) we have more columns
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+

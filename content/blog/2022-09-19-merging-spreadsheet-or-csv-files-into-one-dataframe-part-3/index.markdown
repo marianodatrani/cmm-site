@@ -14,8 +14,8 @@ series: ~
 layout: single
 ---
 
-Benvenuti again. Today we improve further our workflow started in [Part 1](https://datamariano.netlify.app/blog/2022-09-07-merging-spreadsheet-or-csv-files-into-one-dataframe-part-1/) and expanded in [Part 2](https://datamariano.netlify.app/blog/2022-09-14-merging-spreadsheet-or-csv-files-into-one-dataframe-part-2/). In these previous episodes we used files with clean header-row-column format so the reading function could do its work with only filename given. important to know that we have no information about files before read 
-As always, we start with loading the packages we will use.
+Benvenuti again. Today we improve further our workflow started in [Part 1](https://datamariano.netlify.app/blog/2022-09-07-merging-spreadsheet-or-csv-files-into-one-dataframe-part-1/) and expanded in [Part 2](https://datamariano.netlify.app/blog/2022-09-14-merging-spreadsheet-or-csv-files-into-one-dataframe-part-2/). In these previous episodes we used files with clean header-row-column format so the reading function could do its work with only filename provided.  \
+As always, we start with loading the packages we will use, continue with setting the working directory, get all filenames we want to read with the `list.files()` function and print our `filenames` to check them. This time we use the `readxl` package instead of `readr`, because our files this time have ".xls" and ".xlsx" extensions.
 
 
 ```r
@@ -26,8 +26,6 @@ library(stringr)
 library(lubridate)
 ```
 
-And continue with setting the working directory, where we have the files. 
-
 
 
 
@@ -35,14 +33,10 @@ And continue with setting the working directory, where we have the files.
 setwd("path/to/Downloads2020")
 ```
 
-Then we get all filenames we want to read. In the pattern argument of `list.files()` the regex ".*csv$" indicates any character string in filenames ending with ".csv".
-
 
 ```r
-filenames <- list.files(pattern = ".*csv$")
+filenames <- list.files(pattern = ".*xlsx$")
 ```
-
-Printing our `filenames` vector, we can see that we have several files with different logger-associated names.
 
 
 ```r
@@ -50,18 +44,35 @@ filenames
 ```
 
 ```
-##  [1] "Loggername20200122.csv"       "Loggername20200310.csv"      
-##  [3] "Loggername20200522.csv"       "Loggername20200723.csv"      
-##  [5] "Loggername20200915.csv"       "Loggername20201027.csv"      
-##  [7] "Loggername20210108.csv"       "lovesensors20200122.csv"     
-##  [9] "lovesensors20200310.csv"      "lovesensors20200522.csv"     
-## [11] "lovesensors20200723.csv"      "lovesensors20200915.csv"     
-## [13] "lovesensors20201027.csv"      "lovesensors20210108.csv"     
-## [15] "Other-device20200122.csv"     "Other-device20200310.csv"    
-## [17] "Other-device20200522.csv"     "Other-device20200723.csv"    
-## [19] "Other-device20200915.csv"     "Other-device20201027.csv"    
-## [21] "Other-device20210108.csv"     "Time_machine-66_20200122.csv"
-## [23] "Time_machine-66_20200310.csv" "Time_machine-66_20200522.csv"
-## [25] "Time_machine-66_20200723.csv" "Time_machine-66_20200915.csv"
-## [27] "Time_machine-66_20201027.csv" "Time_machine-66_20210108.csv"
+##  [1] "StopTheWar20150121.xlsx" "StopTheWar20150224.xlsx"
+##  [3] "StopTheWar20150318.xlsx" "StopTheWar20150417.xlsx"
+##  [5] "StopTheWar20150505.xlsx" "StopTheWar20150528.xlsx"
+##  [7] "StopTheWar20150707.xlsx" "StopTheWar20150724.xlsx"
+##  [9] "StopTheWar20150813.xlsx" "StopTheWar20150827.xlsx"
+## [11] "StopTheWar20150917.xlsx" "StopTheWar20151009.xlsx"
+## [13] "StopTheWar20151106.xlsx" "StopTheWar20151208.xlsx"
+## [15] "StopTheWar20160107.xlsx" "T-1000_20150108.xlsx"   
+## [17] "T-1000_20150121.xlsx"    "T-1000_20150224.xlsx"   
+## [19] "T-1000_20150318.xlsx"    "T-1000_20150417.xlsx"   
+## [21] "T-1000_20150505.xlsx"    "T-1000_20150528.xlsx"   
+## [23] "T-1000_20150707.xlsx"    "T-1000_20150724.xlsx"   
+## [25] "T-1000_20150813.xlsx"    "T-1000_20150827.xlsx"   
+## [27] "T-1000_20150917.xlsx"    "T-1000_20151009.xlsx"   
+## [29] "T-1000_20151106.xlsx"    "T-1000_20151208.xlsx"   
+## [31] "T-1000_20160107.xlsx"
 ```
+
+We have two series of files check one of each. important to know that we have no information about files before read in the first file ![stw image](stopthewar.jpg) we have columns \
+in the other ![t1000 image](t1000.jpg) we have more columns
+
+
+
+
+
+
+
+
+
+
+
+
