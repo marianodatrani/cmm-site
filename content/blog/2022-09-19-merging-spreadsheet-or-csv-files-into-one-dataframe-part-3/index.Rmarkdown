@@ -14,9 +14,15 @@ series: ~
 layout: single
 ---
 
+<<<<<<< HEAD
 Benvenuti again. Today we improve further our workflow started in [Part 1](https://datamariano.netlify.app/blog/2022-09-07-merging-spreadsheet-or-csv-files-into-one-dataframe-part-1/) and expanded in [Part 2](https://datamariano.netlify.app/blog/2022-09-14-merging-spreadsheet-or-csv-files-into-one-dataframe-part-2/). In these earlier episodes we used files with clean header-row-column format so the reading function could do its work with only filename provided. This time we have to deal with dirty file headers and unneeded columns, meaning that in order to read the data properly, these issues must be solved. \
 \
 As always, we start with loading the packages we will use, continue with setting the working directory, get all filenames we want to read with the `list.files()` function and print our `filenames` to check them. In this episode we use the `readxl` package instead of `readr`, because our files have ".xlsx" extension.
+=======
+Benvenuti again. Today we improve further our workflow started in [Part 1](https://datamariano.netlify.app/blog/2022-09-07-merging-spreadsheet-or-csv-files-into-one-dataframe-part-1/) and expanded in [Part 2](https://datamariano.netlify.app/blog/2022-09-14-merging-spreadsheet-or-csv-files-into-one-dataframe-part-2/). In these previous episodes we used files with clean header-row-column format so the reading function could do its work with only filename provided. This time we have to deal with dirty file headers and unneeded columns, meaning that in order to read the data properly, these issues must be solved. \
+\
+As always, we start with loading the packages we will use, continue with setting the working directory, get all filenames we want to read with the `list.files()` function and print our `filenames` to check them. In this episode we use the `readxl` package instead of `readr`, because our files have ".xls" and ".xlsx" extensions.
+>>>>>>> main
 
 ```{r packages, message=FALSE}
 
@@ -53,6 +59,7 @@ filenames
 ```
 
 We have two series of files with device names "StopTheWar" and "T-1000" and we glance at one of each in Excel to get some information before reading. \
+<<<<<<< HEAD
 \
 ![stw image](stopthewar.jpg) \
 \
@@ -62,6 +69,15 @@ In the "StopTheWar" files there are 9 columns with deliberately idiot and long n
 \
 In the "T-1000" files we have two more columns filled with numeric values, because they are from a different kind of device. Note that in both types the name of these numeric columns starts with "Unit", followed by "X" in "StopTheWar" and "Y" in "T-1000", referring to the unit of measurement. These are fake names (surprisingly, in these fake files), but based on real ones, and the point is that the columns have standard naming with only small differences. And we are going to use these differences in our reading loop to distinguish between the two types of files. \
 \
+=======
+![stw image](stopthewar.jpg) \
+\
+In the "StopTheWar" files there are 9 columns with deliberately idiot and long names, similarly to those I had to deal with in my work. Some columns seem to have only the name because values occur only sporadically in them. There is also a title in the very first row so column names are in the second. Reading these files without specifying the first row to skip would result in a `data.frame` with the first column named after the title and the rest like "...2" and "...3" as the function couldn't find more names in the first row where column names should be by default. Additionally, every column would have character type despite we have a datetime and some numeric columns, because this way our original column names are considered as text values, forcing the the whole column into character type, since data type of values in the same column cannot differ. Let's check the other type of files.\
+\
+![t1000 image](t1000.jpg) \
+\
+In the "T-1000" files we have two more columns filled with numeric values, because they are from a different kind of device. Note that in both types the name of these numeric columns starts with "Unit", followed by "X" in "StopTheWar" and "Y" in "T-1000", referring to the unit of measurement. These are artificial names we gave them, but the point is that the columns have standard naming with only small differences. And we are going to use these differences in our reading loop to distinguish between the two types of files.
+>>>>>>> main
 
 As in the previous parts we continue with defining objects needed for our loop. First we create and print the `logger_names` vector. The regex pattern in `str_replace()` was explained in [Part 2](https://datamariano.netlify.app/blog/2022-09-14-merging-spreadsheet-or-csv-files-into-one-dataframe-part-2/).
 
