@@ -2,14 +2,200 @@
 title: Merging spreadsheet or csv files into one dataframe - Part 4
 author: Mariano
 date: '2022-09-30'
-slug: []
+slug: [merging-files-part-4]
 categories:
   - File merging
 tags:
   - rrrrrrrr
 subtitle: ''
-excerpt: ''
+excerpt: 'A workflow to read data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 4 - dealing with datetime.'
 draft: yes
 series: ~
 layout: single
 ---
+
+Ciao! Working with date and time can be tricky so in this part we extend our workflow from [Part 1](https://datamariano.netlify.app/blog/2022-09-07-merging-spreadsheet-or-csv-files-into-one-dataframe-part-1/),[Part 2](https://datamariano.netlify.app/blog/2022-09-14-merging-spreadsheet-or-csv-files-into-one-dataframe-part-2/) and [Part 3](https://datamariano.netlify.app/blog/2022-09-19-merging-spreadsheet-or-csv-files-into-one-dataframe-part-3/) to address these issues. We will use the same workflow as before, adding a few more steps in order to have proper datetime data type and taking into account lags caused by switching to summer time. \
+\
+We start again with loading the packages we will use, continue with setting the working directory, get all filenames we want to read with the `list.files()` function and print our `filenames` to check them. For this part we use files with ".xlsx" extension as in Part 3.
+
+```{r packages, message=FALSE}
+
+library(dplyr)
+library(readxl)
+library(tibble)
+library(stringr)
+library(lubridate)
+library(tidyr)
+
+```
+
+```{r setup, include=FALSE}
+
+knitr::opts_knit$set(root.dir = "C:/x/cmm_site_backup/file_folder/part4")
+
+```
+
+```{r eval=FALSE}
+
+setwd("path/to/Downloads2015")
+
+```
+
+```{r list files}
+
+filenames <- list.files(pattern = ".*xlsx$")
+
+```
+
+```{r filenames}
+
+filenames
+
+```
+After getting our `logger_names`, this time we create new, `clean_logger_names` too with another `str_replace()` to turn the "-" to "_", avoiding problems later. We missed this step in Part 3, but it will make our life easier when checking if everything was OK after our loop, because R has some restrictions for object names. It can work when simply reading, transforming and exporting data with our loop, but if we wanted to call our object after an assignment, we would have to use its name surrounded by `` (backticks).
+
+```{r get logger names}
+
+logger_names <- unique(str_replace(filenames, "([^_]+)(?:_)*\\d{8}.+", "\\1")) 
+clean_logger_names <- logger_names %>% str_replace("-", "_")
+
+```
+
+```{r loggernames}
+
+clean_logger_names
+
+```
+We create the usual `actual_year` and `real_time` objects to aid our workflow.
+
+```{r actual year, include=FALSE}
+
+actual_year <- 2015
+
+```
+
+```{r fake actual year, eval=FALSE}
+
+actual_year <- as.integer(str_extract(getwd(), "\\d{4}"))
+
+```
+
+```{r real time}
+
+
+real_time <- as_tibble_col(seq.POSIXt(make_datetime(actual_year, 1, 1, 0, 0, 0), 
+                                  make_datetime(actual_year, 12, 31, 23, 55, 0), 600), 
+                       column_name = "Datetime")
+
+```
+
+In the next step we read one sample file with summer time and one with winter time at autumn change to see the main problem related to their switch: there is an overlap between older and newer values, because an extra hour is added to summer time values. At the spring change there is only a gap that is easier to handle, but our solution will solve both switches.
+
+```{r read sample files, warning=FALSE}
+
+a_gmt2_sample_file <- read_xlsx("JeanCojon_20151106.xlsx") %>% 
+      select(starts_with(c("Date", "Unit")))
+
+a_gmt1_sample_file <- read_xlsx("JeanCojon_20151208.xlsx") %>% 
+      select(starts_with(c("Date", "Unit")))
+
+```
+
+Let's inspect the name of their first column that contains the datetime values.
+
+```{r check colnames}
+
+colnames(a_gmt2_sample_file)[1]
+
+colnames(a_gmt1_sample_file)[1]
+
+```
+
+So checking the datetime column names we see that "GMT+02:00" for summer time and "GMT+01:00" for winter time are indicated there and we can use that to automate the process. But before moving on, we take a look at the last rows of the sample file with GMT+2 and the first rows of the sample file with GMT+1 time to see the overlapping datetime values.
+
+```{r head and tail}
+
+tail(a_gmt2_sample_file, 10)
+
+head(a_gmt1_sample_file, 10)
+
+```
+
+As we can see there are the same datetime values at the end of the earlier file as at the beginning of the later. The different values of "Unit" columns between the two files for the same times prove that these rows are not duplicates. We may not see that clearly as a result of 2 digit year format, but our dates are in month-day-year format, because this download happened on 6th November in 2015. It means that data collection of the first file ended and the recording of the second file began on that day. We usually have to deal with various datetime formats, like in the case of our other series of files, so let's check one of these too.
+
+```{r check ymd mdy, warning=FALSE}
+
+a_ymd_hms_sample_file <- read_xlsx("portobello-road20150522.xlsx") %>% 
+  select(starts_with(c("Date", "Unit")))
+
+head(a_ymd_hms_sample_file)
+
+```
+
+Data series of this file started on 10th March in 2015, so there is year-month-day format in this file. Therefore our loop must handle this difference between ymd-mdy formats.\
+\
+Talking about the loop, let's review our modifications compared to earlier versions. \
+As previously, we define the `files_for_one_logger`, followed by initiating an empty `list_for_dataframes`, then an inner loop over `files_for_one_logger` to read the files into the list as `data.frame`s and binding their rows into a `combined_df`, then `left_join()` it with `real_time` to get our `final_df` that we `assign()` into an individual `data.frame` object using the `logger_names` and `actual_year` vectors. \
+\
+Again, in the reading pipeline we select and rename our columns, but this time we use the more up-to-date `rename_with()` instead of `rename_at()` *(as it has remained here from earlier solutions along with some other functions, but we will discuss them in a later post)*. We mentioned above that files with different datetime formats must be distinguished, so the loop contains an additional `if` statement to detect files based on logger name then use either `ymd_hms()` or `mdy_hms()` to turn the character data type to datetime. Additionally, we apply the `round.POSIXt()` function to round the occasionally fragment values to whole seconds. These may not be visible easily, but sometimes present in our data and can lead to unsuccessful joins because of mismatching values. The rounding unit can be set to a couple of time units, but we use the default seconds to see if there is any other issue with our values. We also turn the other columns into numeric type.\
+\
+When binding the rows of our `list_for_dataframes` we start a new pipeline to solve the GMT+1-GMT+2 problem. By applying `pivot_longer()` we turn our datetime column into two distinct columns: one column ("gmt") containing the former column name in all rows and another ("dt_to_correct") with the actual datetime values. The latter is actually the same datetime series under a new name, but this way we have the GMT+1 or GMT+2 information in all rows too, stored in the former column name. After filtering out NAs as a security step, we can use these new columns when defining the +1 and +2 cases of GMT in a `case_when()` function, wrapped inside a `mutate()` call. We simply subtract one hour from values with GMT+2 and keep values with GMT+1 to create our new "Datetime" column. Then we select (and by that reorder) this Datetime and our Sensor columns, ahead of filtering for the `actual_year`. \
+\
+And to get our `final_df` we have to `left_join()` our `combined_df` with `real_time`, before `assign()` our `final_df`s into individual `data.frame`s. Finally we close the loop by removing temporary objects.
+
+```{r nested loop list, eval=TRUE, message=FALSE, warning=FALSE}
+
+for (name in seq_along(logger_names)){ 
+  
+  files_for_one_logger <- list.files(pattern = str_c("^", logger_names[name], ".*.xlsx"))
+
+  list_for_dataframes <- list()
+
+  if (str_detect(logger_names[name], "portobello")){
+  for (i in seq_along(files_for_one_logger)) {
+    list_for_dataframes[[i]] <- read_xlsx(files_for_one_logger[i]) %>% 
+      select(starts_with(c("Date", "Unit"))) %>% 
+      rename_with(~str_replace(., ".*(Sensor_.{1})", "\\1"), starts_with("Unit")) %>%
+      mutate(across(contains("Date"), ymd_hms), across(contains("Date"), round.POSIXt),
+             across(is.character, as.numeric))
+    }
+  } else {
+    for (i in seq_along(files_for_one_logger)) {
+    list_for_dataframes[[i]] <- read_xlsx(files_for_one_logger[i]) %>% 
+      select(starts_with(c("Date", "Unit"))) %>% 
+      rename_with(~str_replace(., ".*(Sensor_.{1})", "\\1"), starts_with("Unit")) %>%
+      mutate(across(contains("Date"), mdy_hms), , across(contains("Date"), round.POSIXt),
+             across(is.character, as.numeric))
+    }
+  }
+
+  combined_df <- bind_rows(list_for_dataframes) %>% 
+    pivot_longer(contains("Date"), names_to = "gmt", values_to = "dt_to_correct") %>% 
+    filter(!is.na(dt_to_correct)) %>%
+    mutate(Datetime = case_when(str_detect(gmt, "\\+01") ~ dt_to_correct, 
+                                str_detect(gmt, "\\+02") ~ dt_to_correct-hours(1))) %>% 
+    select(Datetime, starts_with("Sensor")) %>% 
+    filter(year(Datetime)==actual_year)
+  
+  final_df <- left_join(real_time, combined_df, by="Datetime")
+  
+  assign(str_c(clean_logger_names[name], "_", actual_year), final_df)
+
+ rm(combined_df, final_df, i, name, files_for_one_logger)
+ 
+}
+
+```
+
+And now we can check the former overlapping rows by filtering for those datetime values.
+Since we added `clean_logger_names` to our objects, they can be used simply without backticks.
+
+```{r check former overlap, eval=TRUE}
+
+JeanCojon_2015 %>% filter(Datetime>=ymd_hm("2015-11-06 12:00"), Datetime<=ymd_hm("2015-11-06 14:00"))
+
+```
+
+Va bene. \
+We can now export or work further with these `data.frame`s until we meet again in our next post. \
+Arrivederci!
