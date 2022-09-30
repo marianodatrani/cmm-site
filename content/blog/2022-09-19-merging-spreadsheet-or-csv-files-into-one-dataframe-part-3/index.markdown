@@ -9,7 +9,7 @@ tags:
   - rrrrrrrr
 subtitle: ''
 excerpt: 'A workflow to read data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 3 - dealing with untidy columns and rows.'
-draft: yes
+draft: false
 series: ~
 layout: single
 ---
