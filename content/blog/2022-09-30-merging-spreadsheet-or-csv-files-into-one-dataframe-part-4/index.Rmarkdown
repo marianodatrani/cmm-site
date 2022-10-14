@@ -164,7 +164,7 @@ for (name in seq_along(logger_names)){
     list_for_dataframes[[i]] <- read_xlsx(files_for_one_logger[i]) %>% 
       select(starts_with(c("Date", "Unit"))) %>% 
       rename_with(~str_replace(., ".*(Sensor_.{1})", "\\1"), starts_with("Unit")) %>%
-      mutate(across(contains("Date"), mdy_hms), , across(contains("Date"), round.POSIXt),
+      mutate(across(contains("Date"), mdy_hms), across(contains("Date"), round.POSIXt),
              across(is.character, as.numeric))
     }
   }
