@@ -9,7 +9,7 @@ tags:
   - rrrrrrrr
 subtitle: ''
 excerpt: 'A workflow to read data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 4 - dealing with datetime.'
-draft: yes
+draft: false
 series: ~
 layout: single
 ---
@@ -101,7 +101,7 @@ a_gmt1_sample_file <- read_xlsx("JeanCojon_20151208.xlsx") %>%
       select(starts_with(c("Date", "Unit")))
 ```
 
-Let's inspect the name of their first column that contains the datetime values.
+Let's inspect the name of their first columns that contain the datetime values.
 
 
 ```r
@@ -268,6 +268,6 @@ JeanCojon_2015 %>% filter(Datetime>=ymd_hm("2015-11-06 12:00"), Datetime<=ymd_hm
 ## 13 2015-11-06 14:00:00    83.1     44.5    73.3      48.0
 ```
 
-Va bene. \
+Comparing values in "Sensor" columns with the above shown overlapping values, we can see that everything va bene. \
 We can now export or work further with these `data.frame`s until we meet again in our next post. \
 Arrivederci!

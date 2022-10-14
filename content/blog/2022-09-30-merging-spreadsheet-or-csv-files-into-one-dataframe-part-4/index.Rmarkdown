@@ -101,7 +101,7 @@ a_gmt1_sample_file <- read_xlsx("JeanCojon_20151208.xlsx") %>%
 
 ```
 
-Let's inspect the name of their first column that contains the datetime values.
+Let's inspect the name of their first columns that contain the datetime values.
 
 ```{r check colnames}
 
@@ -196,6 +196,6 @@ JeanCojon_2015 %>% filter(Datetime>=ymd_hm("2015-11-06 12:00"), Datetime<=ymd_hm
 
 ```
 
-Va bene. \
+Comparing values in "Sensor" columns with the above shown overlapping values, we can see that everything va bene. \
 We can now export or work further with these `data.frame`s until we meet again in our next post. \
 Arrivederci!
