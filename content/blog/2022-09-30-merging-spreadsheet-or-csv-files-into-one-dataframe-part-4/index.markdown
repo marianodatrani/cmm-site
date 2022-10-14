@@ -241,13 +241,33 @@ for (name in seq_along(logger_names)){
 }
 ```
 
-check former overlapping rows
-that's why we needed clean names
-
+And now we can check the former overlapping rows by filtering for those datetime values.
+Since we added `clean_logger_names` to our objects, they can be used simply without backticks.
 
 
 ```r
 JeanCojon_2015 %>% filter(Datetime>=ymd_hm("2015-11-06 12:00"), Datetime<=ymd_hm("2015-11-06 14:00"))
 ```
 
-we can now export or work further with these dfs
+```
+## # A tibble: 13 x 5
+##    Datetime            Sensor_1 Sensor_2 Sensor_3 Sensor_4
+##    <dttm>                 <dbl>    <dbl>    <dbl>    <dbl>
+##  1 2015-11-06 12:00:00    92.4      7.90   38.0      51.5 
+##  2 2015-11-06 12:10:00    73.2     90.0    45.8      65.0 
+##  3 2015-11-06 12:20:00    -3.09    10.4    98.3      -9.81
+##  4 2015-11-06 12:30:00    76.3     32.5    36.0      92.6 
+##  5 2015-11-06 12:40:00    54.2     56.1     0.990    22.9 
+##  6 2015-11-06 12:50:00    43.2     97.7    97.0      77.5 
+##  7 2015-11-06 13:00:00    19.0    -15.4    14.6      14.8 
+##  8 2015-11-06 13:10:00    44.9     98.3    62.8     -17.1 
+##  9 2015-11-06 13:20:00    11.2     17.5     7.54     27.6 
+## 10 2015-11-06 13:30:00     9.46    47.7    42.6       9.12
+## 11 2015-11-06 13:40:00   -20.0     59.1    99.7      -4.94
+## 12 2015-11-06 13:50:00    89.5     30.1    -6.85     -7.60
+## 13 2015-11-06 14:00:00    83.1     44.5    73.3      48.0
+```
+
+Va bene. \
+We can now export or work further with these `data.frame`s until we meet again in our next post. \
+Arrivederci!

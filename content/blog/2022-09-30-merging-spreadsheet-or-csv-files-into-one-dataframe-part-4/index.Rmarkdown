@@ -9,7 +9,7 @@ tags:
   - rrrrrrrr
 subtitle: ''
 excerpt: 'A workflow to read data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 4 - dealing with datetime.'
-draft: yes
+draft: false
 series: ~
 layout: single
 ---
