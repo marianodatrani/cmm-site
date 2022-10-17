@@ -337,7 +337,3 @@ And that's all. \
 This workflow can be adapted easily to input files with ".xls" or ".xlsx" extensions, using the `read_excel()`, `read_xls()` or `read_xlsx()` functions from the `readxl` package, if the files have the same one-row-header format, that is column names are in the first row. But in later posts we'll check different cases. \
 \
 Arrivederci a presto!
-
-
-
-
