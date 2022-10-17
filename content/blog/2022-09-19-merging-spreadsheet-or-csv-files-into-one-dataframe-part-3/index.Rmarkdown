@@ -25,6 +25,7 @@ library(readxl)
 library(tibble)
 library(stringr)
 library(lubridate)
+library(writexl)
 
 ```
 
@@ -118,13 +119,13 @@ So we have these above mentioned artificial new column names, indicated already 
 Loop. \
 In this occasion we introduce the pipe "%>%" from the `magrittr` package (loaded with `dplyr`) into the loop to keep our code shorter. The behavior of this pipe can be explained like it considers what is before the pipe as the first argument of the following function (after the "%>%"). It means that functions in a pipeline miss their first argument, typically a `data.frame` to operate on, making these longer scripts more readable and less error-prone. \
 \
-As previously, we define the `files_for_one_logger`, followed by initiating an empty `list_for_dataframes`, then an inner loop over `files_for_one_logger` to read the files into the list as `data.frame`s and binding their rows into a `combined_df`, then `left_join()` it with `real_time` to get our `final_df` that we `assign()` into an individual `data.frame` object using the `logger_names` and `actual_year` vectors. \
+As previously, we define the `files_for_one_logger`, followed by initiating an empty `list_for_dataframes`, then an inner loop over `files_for_one_logger` to read the files into the list as `data.frame`s and binding their rows into a `combined_df`, then `left_join()` it with `real_time` to get our `final_df` that we export them into files with the `write_xlsx()` function from the `writexl` package using `logger_names` and `actual_year` to set fitting names for the files. \
 \
 To solve the described header-column problems we set the "skip" argument to 1 in `read_xlsx()` to omit the first row and start reading from the second, then pipe a few cleaning steps after this function. In this case our columns can be identified by the first part of their name, so we give the appropriate strings "Date" and "Unit" to the helper function `starts_with()` inside `select()` to keep only columns needed. With `rename()`we give its proper name to Datetime, choosing the column again with `starts_with()`. For the other columns we give suitable names with `rename_at()`, applying `starts_with()` once more, nested inside `vars()`, then `str_replace()` inside `funs()` to replace the whole column name with its relevant part. After that we use `mdy_hms()` from `lubridate` inside a `mutate()` function to convert our Datetime column into "POSIXct" and "POSIXt", and `mutate_if()` to turn the remaining character type columns into numeric. \
 \
 Because of the automatic naming of `read_xlsx()`, there should be a lot of warnings after running this loop, but we disabled warnings for this case to avoid getting overwhelmed by these messages.
 
-```{r nested loop list, eval=TRUE, message=FALSE, warning=FALSE}
+```{r nested loop list, eval=FALSE, message=FALSE, warning=FALSE}
 
 for (name in seq_along(logger_names)){ 
   
@@ -145,7 +146,7 @@ for (name in seq_along(logger_names)){
 
   final_df <- left_join(real_time, combined_df, by="Datetime")
   
-  assign(str_c(logger_names[name], "_", actual_year), final_df)
+  write_xlsx(final_df, str_c(logger_names[name], "_", actual_year, ".xlsx")) 
 
  rm(combined_df, final_df, i, name, files_for_one_logger)
  

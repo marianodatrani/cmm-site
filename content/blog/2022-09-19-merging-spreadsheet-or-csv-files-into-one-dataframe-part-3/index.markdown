@@ -25,6 +25,7 @@ library(readxl)
 library(tibble)
 library(stringr)
 library(lubridate)
+library(writexl)
 ```
 
 
@@ -45,24 +46,22 @@ filenames
 ```
 
 ```
-##  [1] "StopTheWar20150121.xlsx" "StopTheWar20150224.xlsx"
-##  [3] "StopTheWar20150318.xlsx" "StopTheWar20150417.xlsx"
-##  [5] "StopTheWar20150505.xlsx" "StopTheWar20150528.xlsx"
-##  [7] "StopTheWar20150707.xlsx" "StopTheWar20150724.xlsx"
-##  [9] "StopTheWar20150813.xlsx" "StopTheWar20150827.xlsx"
-## [11] "StopTheWar20150917.xlsx" "StopTheWar20151009.xlsx"
-## [13] "StopTheWar20151106.xlsx" "StopTheWar20151208.xlsx"
-## [15] "StopTheWar20160107.xlsx" "T-1000_20150108.xlsx"   
-## [17] "T-1000_20150121.xlsx"    "T-1000_20150224.xlsx"   
-## [19] "T-1000_20150318.xlsx"    "T-1000_20150417.xlsx"   
-## [21] "T-1000_20150505.xlsx"    "T-1000_20150528.xlsx"   
-## [23] "T-1000_20150702.xlsx"    "T-1000_20150707.xlsx"   
-## [25] "T-1000_20150723.xlsx"    "T-1000_20150724.xlsx"   
-## [27] "T-1000_20150812.xlsx"    "T-1000_20150813.xlsx"   
-## [29] "T-1000_20150826.xlsx"    "T-1000_20150827.xlsx"   
-## [31] "T-1000_20150917.xlsx"    "T-1000_20151009.xlsx"   
-## [33] "T-1000_20151106.xlsx"    "T-1000_20151208.xlsx"   
-## [35] "T-1000_20160107.xlsx"
+##  [1] "StopTheWar_2015.xlsx"    "StopTheWar20150121.xlsx"
+##  [3] "StopTheWar20150224.xlsx" "StopTheWar20150318.xlsx"
+##  [5] "StopTheWar20150417.xlsx" "StopTheWar20150505.xlsx"
+##  [7] "StopTheWar20150528.xlsx" "StopTheWar20150707.xlsx"
+##  [9] "StopTheWar20150724.xlsx" "StopTheWar20150813.xlsx"
+## [11] "StopTheWar20150827.xlsx" "StopTheWar20150917.xlsx"
+## [13] "StopTheWar20151009.xlsx" "StopTheWar20151106.xlsx"
+## [15] "StopTheWar20151208.xlsx" "StopTheWar20160107.xlsx"
+## [17] "T-1000_2015.xlsx"        "T-1000_20150121.xlsx"   
+## [19] "T-1000_20150224.xlsx"    "T-1000_20150318.xlsx"   
+## [21] "T-1000_20150417.xlsx"    "T-1000_20150505.xlsx"   
+## [23] "T-1000_20150528.xlsx"    "T-1000_20150702.xlsx"   
+## [25] "T-1000_20150723.xlsx"    "T-1000_20150812.xlsx"   
+## [27] "T-1000_20150826.xlsx"    "T-1000_20150917.xlsx"   
+## [29] "T-1000_20151009.xlsx"    "T-1000_20151106.xlsx"   
+## [31] "T-1000_20151208.xlsx"    "T-1000_20160107.xlsx"
 ```
 
 We have two series of files with device names "StopTheWar" and "T-1000" and we glance at one of each in Excel to get some information before reading. \
@@ -88,7 +87,8 @@ logger_names
 ```
 
 ```
-## [1] "StopTheWar" "T-1000"
+## [1] "StopTheWar_2015.xlsx" "StopTheWar"           "T-1000_2015.xlsx"    
+## [4] "T-1000"
 ```
 
 Then we get the `actual_year`, using this vector in `make_datetime()` functions when creating the one column `real_time` for the whole calendar year. In these files we have 10 minute time intervals so we set the "by" argument representing the desired time step of `seq.POSIXt()` to 600 seconds.
@@ -133,11 +133,11 @@ head(a_t_1000_file)
 ##   `Title: T-1000__~` ...2  ...3  ...4  ...5  ...6  ...7  ...8  ...9  ...10 ...11
 ##   <chr>              <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr>
 ## 1 #                  Date~ Unit~ Unit~ Unit~ Unit~ Some~ Anot~ Othe~ Acti~ Cont~
-## 2 1                  02.2~ -16.~ -11.~ 1.73~ 27.8~ <NA>  <NA>  <NA>  <NA>  <NA> 
-## 3 3                  02.2~ 6.38~ 83.4~ 57.4~ 29.1~ <NA>  <NA>  <NA>  <NA>  <NA> 
-## 4 5                  02.2~ 5.60~ 87.5~ -19.~ 80.9~ <NA>  <NA>  <NA>  <NA>  <NA> 
-## 5 7                  02.2~ 70.4~ -17.~ 94.2~ 44.1~ <NA>  <NA>  <NA>  <NA>  <NA> 
-## 6 9                  02.2~ 82.5~ 0.02~ 61.7~ 38.4~ <NA>  <NA>  <NA>  <NA>  <NA>
+## 2 1                  02.2~ 85.6~ 7.17~ 35.2~ 90.4~ <NA>  <NA>  <NA>  <NA>  <NA> 
+## 3 3                  02.2~ 23.0~ 62.3~ 10.1~ -3.5~ <NA>  <NA>  <NA>  <NA>  <NA> 
+## 4 5                  02.2~ 65.5~ 99.4~ 36.7~ 13.0~ <NA>  <NA>  <NA>  <NA>  <NA> 
+## 5 7                  02.2~ 97.4~ 94.9~ 66.4~ 85.7~ <NA>  <NA>  <NA>  <NA>  <NA> 
+## 6 9                  02.2~ 75.5~ 68.1~ 24.8~ 95.7~ <NA>  <NA>  <NA>  <NA>  <NA>
 ```
 
 So we have these above mentioned artificial new column names, indicated already in the function message, and character data types. We have to get rid of our first row and thus enable the function to recognize the real column names and data types. In addition to that, we have some superfluous columns like the first one with measurement number, which too can be excluded in this step. In fact, only the datetime and columns whose name starts with "Unit" are needed.\
@@ -146,7 +146,7 @@ So we have these above mentioned artificial new column names, indicated already 
 Loop. \
 In this occasion we introduce the pipe "%>%" from the `magrittr` package (loaded with `dplyr`) into the loop to keep our code shorter. The behavior of this pipe can be explained like it considers what is before the pipe as the first argument of the following function (after the "%>%"). It means that functions in a pipeline miss their first argument, typically a `data.frame` to operate on, making these longer scripts more readable and less error-prone. \
 \
-As previously, we define the `files_for_one_logger`, followed by initiating an empty `list_for_dataframes`, then an inner loop over `files_for_one_logger` to read the files into the list as `data.frame`s and binding their rows into a `combined_df`, then `left_join()` it with `real_time` to get our `final_df` that we `assign()` into an individual `data.frame` object using the `logger_names` and `actual_year` vectors. \
+As previously, we define the `files_for_one_logger`, followed by initiating an empty `list_for_dataframes`, then an inner loop over `files_for_one_logger` to read the files into the list as `data.frame`s and binding their rows into a `combined_df`, then `left_join()` it with `real_time` to get our `final_df` that we export them into files with the `write_xlsx()` function from the `writexl` package using `logger_names` and `actual_year` to set fitting names for the files. \
 \
 To solve the described header-column problems we set the "skip" argument to 1 in `read_xlsx()` to omit the first row and start reading from the second, then pipe a few cleaning steps after this function. In this case our columns can be identified by the first part of their name, so we give the appropriate strings "Date" and "Unit" to the helper function `starts_with()` inside `select()` to keep only columns needed. With `rename()`we give its proper name to Datetime, choosing the column again with `starts_with()`. For the other columns we give suitable names with `rename_at()`, applying `starts_with()` once more, nested inside `vars()`, then `str_replace()` inside `funs()` to replace the whole column name with its relevant part. After that we use `mdy_hms()` from `lubridate` inside a `mutate()` function to convert our Datetime column into "POSIXct" and "POSIXt", and `mutate_if()` to turn the remaining character type columns into numeric. \
 \
@@ -173,7 +173,7 @@ for (name in seq_along(logger_names)){
 
   final_df <- left_join(real_time, combined_df, by="Datetime")
   
-  assign(str_c(logger_names[name], "_", actual_year), final_df)
+  write_xlsx(final_df, str_c(logger_names[name], "_", actual_year, ".xlsx")) 
 
  rm(combined_df, final_df, i, name, files_for_one_logger)
  
