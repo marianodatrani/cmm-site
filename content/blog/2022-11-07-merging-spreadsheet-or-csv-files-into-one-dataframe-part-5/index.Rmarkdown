@@ -2,13 +2,13 @@
 title: Merging spreadsheet or csv files into one dataframe - Part 5
 author: Mariano
 date: '2022-11-07'
-slug: []
+slug: [merging-files-part-5]
 categories:
   - File merging
 tags:
   - rrrrrrrr
 subtitle: ''
-excerpt: ''
+excerpt: 'A workflow to read data from separate files with a unified format, merge them into a single data frame, then export them as one file. Part 4 - all in.'
 draft: yes
 series: ~
 layout: single
